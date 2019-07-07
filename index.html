@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery.js"></script>
+	</head>
+	<body>
+		<input type="number" class="total" placeholder="Total amount" />
+		<input type="text" class="team_chance" placeholder="Team race chance percentage" />
+		<textarea class="output"></textarea>
+		<button class="generate">Generate</button>
+
+		<script>
+
+			var tracks = [ 
+				//Madman Stadium
+				// { track: 'bigstadium_demolition_arena', min_laps: 5, max_laps: 10, pick_chance: 1 },
+				{ track: 'bigstadium_figure_8', min_laps: 7, max_laps: 9, pick_chance: 3 },
+
+				//Fairfield County
+				{ track: 'smallstadium_demolition_arena', min_laps: 5, max_laps: 10, pick_chance: 3 },
+
+				//Fairfield Mudpit
+				{ track: 'mudpit_demolition_arena', min_laps: 5, max_laps: 10, pick_chance: 3 },
+
+				//Fairfield Grass Arena
+				{ track: 'grass_arena_demolition_arena', min_laps: 5, max_laps: 10, pick_chance: 3 },
+
+				//Glendale Countryside
+				{ track: 'field_derby_arena', min_laps: 5, max_laps: 10, pick_chance: 3 },
+
+				//Bloomfield Speedway
+				// { track: 'dirt_speedway_figure_8', min_laps: 7, max_laps: 12, pick_chance: 1 },
+
+				//Bonebreaker Valley
+				{ track: 'bonebreaker_valley_main_circuit', min_laps: 6, max_laps: 8, pick_chance: 4 },
+
+				//Crash Canyon
+				{ track: 'crash_canyon_main_circuit', min_laps: 6, max_laps: 8, pick_chance: 4 },
+
+				//Midwest Motocenter
+				{ track: 'gravel1_main_loop', min_laps: 4, max_laps: 6, pick_chance: 2 },
+				{ track: 'gravel1_main_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 2 },
+
+				//Hilltop Stadium
+				{ track: 'speedway1_figure_8', min_laps: 7, max_laps: 9, pick_chance: 3 },
+				{ track: 'speedway1_oval', min_laps: 3, max_laps: 5, pick_chance: 1 },
+
+				//Big Valley Speedway
+				// { track: 'speedway2_classic_arena', min_laps: 5, max_laps: 10, pick_chance: 1 },
+				// { track: 'speedway2_demolition_arena', min_laps: 5, max_laps: 10, pick_chance: 1 },
+				{ track: 'speedway2_figure_8', min_laps: 7, max_laps: 9, pick_chance: 3 },
+				{ track: 'speedway2_inner_oval', min_laps: 3, max_laps: 5, pick_chance: 1 },
+				{ track: 'speedway2_outer_oval', min_laps: 3, max_laps: 5, pick_chance: 1 },
+				{ track: 'speedway2_oval_loop', min_laps: 4, max_laps: 6, pick_chance: 2 },
+				//Sandstone Raceway
+				{ track: 'sandpit1_long_loop', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'sandpit1_long_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'sandpit1_short_loop', min_laps: 4, max_laps: 6, pick_chance: 3 },
+				{ track: 'sandpit1_short_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 3 },
+
+				{ track: 'sandpit1_alt_loop', min_laps: 4, max_laps: 7, pick_chance: 4 },
+				{ track: 'sandpit1_alt_loop_rev', min_laps: 4, max_laps: 7, pick_chance: 4 },
+				{ track: 'sandpit1_alt_loop', min_laps: 4, max_laps: 7, pick_chance: 3 },
+				{ track: 'sandpit1_alt_loop_rev', min_laps: 4, max_laps: 7, pick_chance: 3 },
+
+				//Savolax Sandpit
+				{ track: 'sandpit2_2', min_laps: 4, max_laps: 6, pick_chance: 3 },
+				{ track: 'sandpit2_2_rev', min_laps: 4, max_laps: 6, pick_chance: 3 },
+				{ track: 'sandpit2_full_circuit', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'sandpit2_full_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Boulder Bank Circuit
+				{ track: 'sandpit3_long_loop', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'sandpit3_long_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				{ track: 'sandpit3_short_loop', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'sandpit3_short_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Fire Rock Raceway
+				{ track: 'tarmac1_main_circuit', min_laps: 4, max_laps: 6, pick_chance: 2 },
+				{ track: 'tarmac1_main_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 3 },
+
+				//Motorcity Circuit
+				{ track: 'tarmac2_main_circuit', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'tarmac2_main_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Espedalen Raceway
+				{ track: 'tarmac3_main_circuit', min_laps: 4, max_laps: 6, pick_chance: 4 },
+				{ track: 'tarmac3_main_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 4 },
+				{ track: 'tarmac3_short_circuit', min_laps: 4, max_laps: 6, pick_chance: 5 },                    
+				{ track: 'tarmac3_short_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Finncross Circuit
+				{ track: 'mixed1_main_circuit', min_laps: 4, max_laps: 7, pick_chance: 3 },
+				{ track: 'mixed1_main_circuit_rev', min_laps: 4, max_laps: 7, pick_chance: 3 },
+
+				//Maasten Motorcenter
+				{ track: 'mixed2_main_circuit', min_laps: 4, max_laps: 7, pick_chance: 5 },
+				{ track: 'mixed2_main_circuit_rev', min_laps: 4, max_laps: 7, pick_chance: 5 },
+
+				//Pinehills Raceway
+				{ track: 'mixed3_long_loop', min_laps: 3, max_laps: 6, pick_chance: 5 },
+				{ track: 'mixed3_long_loop_rev', min_laps: 3, max_laps: 6, pick_chance: 5 },
+
+				{ track: 'mixed3_short_loop', min_laps: 4, max_laps: 6, pick_chance: 3 },
+				{ track: 'mixed3_short_loop_rev', min_laps: 4, max_laps: 6, pick_chance: 3 },
+
+				//Rosenheim Raceway
+				{ track: 'mixed4_main_circuit', min_laps: 4, max_laps: 6, pick_chance: 5 },
+				{ track: 'mixed4_main_circuit_rev', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Northland Raceway
+				{ track: 'mixed5_outer_loop', min_laps: 3, max_laps: 6, pick_chance: 2 },
+				{ track: 'mixed5_outer_loop_rev', min_laps: 3, max_laps: 6, pick_chance: 3 },
+				{ track: 'mixed5_inner_loop', min_laps: 3, max_laps: 6, pick_chance: 2 },
+				{ track: 'mixed5_inner_loop_rev', min_laps: 3, max_laps: 6, pick_chance: 2 },
+
+				{ track: 'mixed5_free_route', min_laps: 4, max_laps: 6, pick_chance: 5 },
+
+				//Firwood Motorcenter
+				{ track: 'mixed7_r1', min_laps: 4, max_laps: 6, pick_chance: 2 },
+				{ track: 'mixed7_r1_rev', min_laps: 4, max_laps: 6, pick_chance: 3 },
+				{ track: 'mixed7_r3', min_laps: 4, max_laps: 6, pick_chance: 1 },
+				{ track: 'mixed7_r3_rev', min_laps: 4, max_laps: 6, pick_chance: 2 },
+
+			];
+
+			function shuffle(a) {
+			    var j, x, i;
+			    for (i = a.length - 1; i > 0; i--) {
+			        j = Math.floor(Math.random() * (i + 1));
+			        x = a[i];
+			        a[i] = a[j];
+			        a[j] = x;
+			    }
+			    return a;
+			}
+
+			function getRandomInt(min, max) {
+			    min = Math.ceil(min);
+			    max = Math.floor(max);
+			    return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+
+			function updateTracks( )
+			{
+				var res = tracks.slice( 0, tracks.length );
+
+				for( var i = 0; i < tracks.length; i++ )
+				{
+					var cnt = 1;
+
+					while( cnt < tracks[ i ].pick_chance )
+					{
+						res.push( tracks[ i ] );
+						cnt++;
+					}
+				}
+
+				return res;
+			}
+
+			$( document ).ready( function( ) {
+
+				tracks = updateTracks( );
+
+				$( document ).on( 'touchend click', '.generate', function( e ) {
+					e.preventDefault();
+
+					var amount = $( '.total' ).val();
+
+					var team_chance = +$( '.team_chance' ).val();
+
+					var count = 0;
+
+					var result = [];
+
+					var last_item = null;
+
+					
+
+					// loop while track count is lower than given amount
+					while( count < amount )
+					{
+						// shuffle tracks
+						var tmp_tracks = shuffle( tracks );
+
+						// loop thru shuffled tracks
+						for( var i = 0; i < tmp_tracks.length; i++ )
+						{
+							if( count >= amount )
+								break;
+
+							var item = tmp_tracks[ i ];  //tracks[ Math.floor( Math.random( ) * tracks.length ) ];
+
+							// determine whether its a team race
+							var is_team_race = getRandomInt( 0, 100 ) < team_chance;
+
+							// get amt of teams
+							var amt_teams = getRandomInt( 2, 4 );
+
+							// if last item wasnt null means it was a track
+							if( last_item !== null )
+							{
+								// check if current track is same as last one, if so, grab a new one
+								while( item === last_item )
+									item = tracks[ Math.floor( Math.random( ) * tracks.length ) ];
+
+								// check if current track is same as last one or reversed, if so, grab a new one
+								while( item.track.includes( last_item.track.split( '_' )[ 0 ] ) )
+									item = tracks[ Math.floor( Math.random( ) * tracks.length ) ];
+							}
+
+							// if its not a team race
+							if( !is_team_race )
+								result.push( 'el_add=' + item.track + '\nel_laps=' + getRandomInt( item.min_laps, item.max_laps ) + '\n' );
+							else // if its a team race
+								result.push( 'el_add=' + item.track + '\nel_laps=' + getRandomInt( item.min_laps, item.max_laps ) + '\nel_gamemode="team race"\nel_num_teams=' + amt_teams + '\n' );
+
+							last_item = item;
+
+							count++;
+						}
+					}
+
+					$( '.output' ).text( result.join( '' ) );
+				} );
+
+			} );
+		</script>
+	</body>
+</html>
